@@ -1,0 +1,29 @@
+name: Daily Instagram AI Post
+
+on:
+  schedule:
+    - cron: '57 20 * * *'
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Add environment variables
+        run: |
+          echo IG_USERNAME=${{ secrets.IG_USERNAME }}
+          echo IG_PASSWORD=${{ secrets.IG_PASSWORD }}
+          echo OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+
+      - name: Run script
+        run: python main.py

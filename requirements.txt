@@ -1,0 +1,7 @@
+langchain
+langchain-openai
+langchain-community
+openai
+instagrapi
+pillow
+python-dotenv
