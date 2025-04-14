@@ -51,7 +51,7 @@ def generate_post(category, openai_api_key):
         input_variables=["topic"],
         template=prompt_template
     )
-    llm = ChatOpenAI(temperature=1.0, max_tokens=1024, model_name="gpt-4o-mini", openai_api_key=openai_api_key)
+    llm = ChatOpenAI(temperature=1.0, max_tokens=1024, model_name="gpt-4.1-mini", openai_api_key=openai_api_key)
     chain = prompt | llm
     post = chain.invoke({"category": category}).content
     start = post.find('{')
@@ -74,6 +74,6 @@ def create_caption(post, openai_api_key):
         input_variables=["title", "description"],
         template=prompt_template
     )
-    llm = ChatOpenAI(temperature=1.0, max_tokens=1024, model_name="gpt-4o-mini", openai_api_key=openai_api_key)
+    llm = ChatOpenAI(temperature=1.0, max_tokens=1024, model_name="gpt-4.1-mini", openai_api_key=openai_api_key)
     chain = prompt | llm
     return chain.invoke({"title": post["title"], "description": post["description"]}).content
