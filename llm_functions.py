@@ -31,7 +31,7 @@ def generate_post(category, openai_api_key):
         
         Respond in a JSON format like this:
         {{
-            "title": "Your catchy title. Maximum 1 line.",
+            "title": "Your catchy title. Maximum 1 line with 50 characters (including spaces).",
             "description": "A clear engaging explanation of the topic. 10-20 lines."
             "code": "Optional short code block of 5-10 lines or empty string."
         }}
