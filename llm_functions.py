@@ -44,6 +44,7 @@ def generate_post(category, openai_api_key):
         - Don't use emojis.
         - Sum of lines used by description and code should be 15-20 lines strictly.
         - Also add empty line in code after end of block of code like classes, functions or loops.
+        - Don't write incomplete code like comments only.
         
         Recheck and correct if errors and mistakes.
         """
