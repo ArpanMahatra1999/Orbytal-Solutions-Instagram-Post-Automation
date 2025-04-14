@@ -132,9 +132,9 @@ def create_image(post):
 
     temp_image = Image.new('RGB', (100, 100))
     draw_temp = ImageDraw.Draw(temp_image)
-    title_font = ImageFont.truetype("fonts/Montserrat/static/Montserrat-Bold.ttf", 25)
-    description_font = ImageFont.truetype("fonts/Montserrat/static/Montserrat-SemiBold.ttf", 18)
-    code_font = ImageFont.truetype("fonts/Fira_Code/FiraCode-VariableFont_wght.ttf", 18)
+    title_font = ImageFont.truetype("fonts/Montserrat/static/Montserrat-Bold.ttf", 22)
+    description_font = ImageFont.truetype("fonts/Montserrat/static/Montserrat-SemiBold.ttf", 16)
+    code_font = ImageFont.truetype("fonts/Fira_Code/FiraCode-VariableFont_wght.ttf", 16)
 
     try:
         logo_img = Image.open("logo.png").convert("RGBA")
