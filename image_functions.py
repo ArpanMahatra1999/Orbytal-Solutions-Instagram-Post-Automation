@@ -17,13 +17,15 @@ def draw_title(draw, title, font, image_width, y, color, shadow_color):
 
     return underline_y + 20
 
-def draw_description(draw, description, font, x, y, image_width, color, shadow_color):
+def draw_description(draw, description, font, x, y, image_width, color, shadow_color, max_height):
     lines = description.splitlines()
     prev_line_was_bullet = False
 
     for line in lines:
-        is_bullet_point = line.startswith("*  ")
+        if y >= max_height:
+            break
 
+        is_bullet_point = line.startswith("*  ")
         if prev_line_was_bullet and not is_bullet_point:
             y += 10
 
@@ -41,12 +43,14 @@ def draw_description(draw, description, font, x, y, image_width, color, shadow_c
                 if get_text_size(draw, current_line + " " + word, font)[0] <= image_width - x * 2:
                     current_line += " " + word if current_line else word
                 else:
+                    if y + line_height > max_height:
+                        break
                     draw.text((x + 2, y + 2), current_line, font=font, fill=shadow_color)
                     draw.text((x, y), current_line, font=font, fill=color)
                     y += line_height + 10
                     current_line = word
 
-            if current_line:
+            if current_line and y + line_height <= max_height:
                 draw.text((x + 2, y + 2), current_line, font=font, fill=shadow_color)
                 draw.text((x, y), current_line, font=font, fill=color)
                 y += line_height + 10
@@ -94,27 +98,12 @@ def draw_code(draw, code, font, x, y, image_width, color, image_height, logo_img
 
     return y + block_height + outer_border, None, None
 
-def calculate_content_height(draw, post, title_font, desc_font, code_font, image_width, margin, logo_height):
-    height = 0
-    title_width, title_height = get_text_size(draw, post['title'], title_font)
-    height += title_height + 10 + 4
-
-    for line in post['description'].splitlines():
-        _, line_height = get_text_size(draw, line, desc_font)
-        height += line_height + 10
-
-    height += 20 + 10
-    height += 300 + logo_height + margin * 2
-
-    return height
-
 def create_image(post):
-    content_width = 800
+    fixed_size = (800, 800)
     margin = 40
     logo_size = 80
     border_width = 10
     padding = 20
-    target_size = 800
 
     bg_color = "#00A79D"
     text_color = "white"
@@ -123,7 +112,7 @@ def create_image(post):
     title_shadow_color = (17, 124, 113)
     description_shadow_color = (16, 155, 142)
 
-    temp_image = Image.new('RGB', (100, 100))
+    temp_image = Image.new('RGB', fixed_size)
     draw_temp = ImageDraw.Draw(temp_image)
     title_font = ImageFont.truetype("fonts/Montserrat/static/Montserrat-Bold.ttf", 25)
     description_font = ImageFont.truetype("fonts/Montserrat/static/Montserrat-SemiBold.ttf", 18)
@@ -137,37 +126,24 @@ def create_image(post):
         logo_img = None
         logo_size = 0
 
-    content_height = calculate_content_height(draw_temp, post, title_font, description_font, code_font, content_width, margin, logo_size)
-    image_size = (content_width, content_height)
-    image = Image.new('RGB', image_size, color=bg_color)
-    draw = ImageDraw.Draw(image)
+    working_image = Image.new("RGB", (1000, 2000), color=bg_color)
+    draw = ImageDraw.Draw(working_image)
 
-    y = margin
     x_padding = margin
+    y = margin
 
-    y = draw_title(draw, post['title'], title_font, image_size[0], y, text_color, title_shadow_color)
-    y = draw_description(draw, post['description'], description_font, x_padding, y, image_size[0], text_color, description_shadow_color)
+    y = draw_title(draw, post['title'], title_font, working_image.width, y, text_color, title_shadow_color)
+
+    max_description_y = fixed_size[1] - 300  # Leave room for code box
+    y = draw_description(draw, post['description'], description_font, x_padding, y, working_image.width, text_color, description_shadow_color, max_description_y)
+
     y += 20
-
-    y, logo_x, logo_y = draw_code(draw, post['code'], code_font, x_padding, y, image_size[0], code_text_color, image_size[1], logo_img, margin, padding)
+    y, logo_x, logo_y = draw_code(draw, post['code'], code_font, x_padding, y, working_image.width, code_text_color, working_image.height, logo_img, margin, padding)
 
     if logo_img and logo_x is not None:
-        image.paste(logo_img, (logo_x, logo_y), logo_img)
+        working_image.paste(logo_img, (logo_x, logo_y), logo_img)
 
-    final_image = image.convert("RGB")
-    bordered_image = ImageOps.expand(final_image, border=border_width, fill=border_color)
-
-    # Make it exactly 800x800
-    bw, bh = bordered_image.size
-    output_image = Image.new("RGB", (target_size, target_size), bg_color)
-
-    if bw > target_size or bh > target_size:
-        bordered_image = bordered_image.resize((target_size, target_size), Image.ANTIALIAS)
-        output_image.paste(bordered_image, (0, 0))
-    else:
-        paste_x = (target_size - bw) // 2
-        paste_y = (target_size - bh) // 2
-        output_image.paste(bordered_image, (paste_x, paste_y))
-
-    output_image.save('post.png')
-    output_image.show()
+    cropped_image = working_image.crop((0, 0, fixed_size[0], fixed_size[1]))
+    bordered_image = ImageOps.expand(cropped_image, border=border_width, fill=border_color)
+    bordered_image.save("post.png")
+    bordered_image.show()
