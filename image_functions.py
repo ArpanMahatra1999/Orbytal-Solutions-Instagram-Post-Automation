@@ -1,10 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
-
 def get_text_size(draw, text, font):
     bbox = draw.textbbox((0, 0), text, font=font)
     return bbox[2] - bbox[0], bbox[3] - bbox[1]
-
 
 def draw_title(draw, title, font, image_width, y, color, shadow_color):
     title_width, title_height = get_text_size(draw, title, font)
@@ -18,7 +16,6 @@ def draw_title(draw, title, font, image_width, y, color, shadow_color):
     draw.line((x, underline_y, x + title_width, underline_y), fill=color, width=2)
 
     return underline_y + 20
-
 
 def draw_description(draw, description, font, x, y, image_width, color, shadow_color):
     lines = description.splitlines()
@@ -58,7 +55,6 @@ def draw_description(draw, description, font, x, y, image_width, color, shadow_c
 
     return y
 
-
 def draw_code(draw, code, font, x, y, image_width, color, image_height, logo_img, margin, padding):
     lines = code.splitlines()
     outer_border = 2
@@ -68,19 +64,16 @@ def draw_code(draw, code, font, x, y, image_width, color, image_height, logo_img
     block_width = image_width - 2 * x
     block_height = bottom_y - y
 
-    # Outer white border
     draw.rectangle(
         [x - outer_border, y - outer_border, x + block_width + outer_border, y + block_height + outer_border],
         fill="white"
     )
 
-    # Inner black background
     draw.rectangle(
         [x, y, x + block_width, y + block_height],
         fill="black"
     )
 
-    # Space reserved for logo at bottom-right
     logo_height = logo_img.height if logo_img else 0
     text_area_height = block_height - logo_height - padding
 
@@ -94,14 +87,12 @@ def draw_code(draw, code, font, x, y, image_width, color, image_height, logo_img
         else:
             break
 
-    # Draw logo at bottom-right (with 5px padding from edges of code section)
     if logo_img:
         logo_x = x + block_width - logo_img.width - 5
         logo_y = y + block_height - logo_img.height - 5
         return (y + block_height + outer_border, logo_x, logo_y)
 
     return y + block_height + outer_border, None, None
-
 
 def calculate_content_height(draw, post, title_font, desc_font, code_font, image_width, margin, logo_height):
     height = 0
@@ -117,13 +108,13 @@ def calculate_content_height(draw, post, title_font, desc_font, code_font, image
 
     return height
 
-
 def create_image(post):
     content_width = 800
     margin = 40
     logo_size = 80
     border_width = 10
     padding = 20
+    target_size = 800
 
     bg_color = "#00A79D"
     text_color = "white"
@@ -147,7 +138,7 @@ def create_image(post):
         logo_size = 0
 
     content_height = calculate_content_height(draw_temp, post, title_font, description_font, code_font, content_width, margin, logo_size)
-    image_size = (content_width + 2 * margin, content_height)
+    image_size = (content_width, content_height)
     image = Image.new('RGB', image_size, color=bg_color)
     draw = ImageDraw.Draw(image)
 
@@ -165,5 +156,18 @@ def create_image(post):
 
     final_image = image.convert("RGB")
     bordered_image = ImageOps.expand(final_image, border=border_width, fill=border_color)
-    bordered_image.save('post.png')
-    bordered_image.show()
+
+    # Make it exactly 800x800
+    bw, bh = bordered_image.size
+    output_image = Image.new("RGB", (target_size, target_size), bg_color)
+
+    if bw > target_size or bh > target_size:
+        bordered_image = bordered_image.resize((target_size, target_size), Image.ANTIALIAS)
+        output_image.paste(bordered_image, (0, 0))
+    else:
+        paste_x = (target_size - bw) // 2
+        paste_y = (target_size - bh) // 2
+        output_image.paste(bordered_image, (paste_x, paste_y))
+
+    output_image.save('post.png')
+    output_image.show()
