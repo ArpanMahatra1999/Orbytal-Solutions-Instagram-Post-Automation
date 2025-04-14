@@ -22,39 +22,37 @@ def draw_title(draw, title, font, image_width, y, color, shadow_color):
 
 def draw_description(draw, description, font, x, y, image_width, color, shadow_color):
     lines = description.splitlines()
-    prev_line_was_bullet = False
+    bullet_indent = 20
+    line_spacing = 10
 
     for line in lines:
-        is_bullet_point = line.startswith("*  ")
+        is_bullet = line.startswith("*  ")
+        text = line[3:] if is_bullet else line  # Remove bullet prefix for measuring
 
-        if prev_line_was_bullet and not is_bullet_point:
-            y += 10
+        words = text.split()
+        current_line = ""
+        line_height = get_text_size(draw, "A", font)[1]
 
-        if is_bullet_point:
-            draw.text((x, y), line, font=font, fill=shadow_color)
-            draw.text((x, y), line, font=font, fill=color)
-            _, line_height = get_text_size(draw, line, font)
-            y += line_height + 10
-        else:
-            words = line.split()
-            current_line = ""
-            line_height = get_text_size(draw, "A", font)[1]
+        # Set initial x based on bullet or normal line
+        x_offset = x + bullet_indent if is_bullet else x
+        prefix = "*  " if is_bullet else ""
 
-            for word in words:
-                if get_text_size(draw, current_line + " " + word, font)[0] <= image_width - x * 2:
-                    current_line += " " + word if current_line else word
-                else:
-                    draw.text((x + 2, y + 2), current_line, font=font, fill=shadow_color)
-                    draw.text((x, y), current_line, font=font, fill=color)
-                    y += line_height + 10
-                    current_line = word
+        for word in words:
+            test_line = f"{prefix}{current_line} {word}".strip()
+            text_width, _ = get_text_size(draw, test_line, font)
+            if text_width <= image_width - 2 * x:
+                current_line = test_line
+            else:
+                draw.text((x_offset + 2, y + 2), current_line, font=font, fill=shadow_color)
+                draw.text((x_offset, y), current_line, font=font, fill=color)
+                y += line_height + line_spacing
+                current_line = word
+                prefix = ""  # Bullet symbol only for the first line of a bullet
 
-            if current_line:
-                draw.text((x + 2, y + 2), current_line, font=font, fill=shadow_color)
-                draw.text((x, y), current_line, font=font, fill=color)
-                y += line_height + 10
-
-        prev_line_was_bullet = is_bullet_point
+        if current_line:
+            draw.text((x_offset + 2, y + 2), current_line, font=font, fill=shadow_color)
+            draw.text((x_offset, y), current_line, font=font, fill=color)
+            y += line_height + line_spacing
 
     return y
 
@@ -167,3 +165,4 @@ def create_image(post):
     bordered_image = ImageOps.expand(final_image, border=border_width, fill=border_color)
     bordered_image.save('post.png')
     bordered_image.show()
+
