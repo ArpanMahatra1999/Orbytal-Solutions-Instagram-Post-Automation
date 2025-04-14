@@ -20,11 +20,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Add environment variables
-        run: |
-          echo IG_USERNAME=${{ secrets.IG_USERNAME }}
-          echo IG_PASSWORD=${{ secrets.IG_PASSWORD }}
-          echo OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-
       - name: Run script
+        env:
+          IG_USERNAME: ${{ secrets.IG_USERNAME }}
+          IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python main.py
