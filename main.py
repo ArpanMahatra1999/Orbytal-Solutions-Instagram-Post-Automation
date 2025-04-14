@@ -18,7 +18,6 @@ if __name__ == "__main__":
     post = generate_post(category, openai_api_key=os.getenv("OPENAI_API_KEY"))
     time.sleep(60)
     caption = create_caption(post, openai_api_key=os.getenv("OPENAI_API_KEY"))
-    time.sleep(60)
 
     # create image and post to instagram
     create_image(post)
