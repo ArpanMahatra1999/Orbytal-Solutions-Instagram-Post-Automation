@@ -24,4 +24,4 @@ if __name__ == "__main__":
     time.sleep(60)
 
     # post to instagram
-    upload_to_instagram("post.png", caption)
+    upload_to_instagram("post.png", caption, os.getenv("IG_USERNAME"), os.getenv("IG_PASSWORD"))
