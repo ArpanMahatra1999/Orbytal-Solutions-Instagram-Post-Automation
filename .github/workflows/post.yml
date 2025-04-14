@@ -2,7 +2,8 @@ name: Daily Instagram AI Post
 
 on:
   schedule:
-    - cron: '25 21 * * *'
+    - cron: '30 21 * * *'
+  workflow_dispatch:
 
 jobs:
   post:
