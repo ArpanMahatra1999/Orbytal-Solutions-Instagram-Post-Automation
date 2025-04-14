@@ -1,6 +1,5 @@
 # general libraries
 import os
-import time
 from dotenv import load_dotenv
 
 # functions
@@ -16,7 +15,6 @@ if __name__ == "__main__":
     # create post and caption
     category = select_category()
     post = generate_post(category, openai_api_key=os.getenv("OPENAI_API_KEY"))
-    time.sleep(60)
     caption = create_caption(post, openai_api_key=os.getenv("OPENAI_API_KEY"))
 
     # create image and post to instagram
