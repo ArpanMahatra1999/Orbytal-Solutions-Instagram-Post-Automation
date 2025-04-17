@@ -30,7 +30,7 @@ def generate_post(category, openai_api_key):
             Category: {category}
         
         Task:
-            Generate an Instagram post on random topic (junior to intermediate level) for one of those sub-categories.
+            Generate an Instagram post on random topic (junior to intermediate level) for one of those sub-categories. Don't include already used topic.
             
             Respond in a JSON format like this:
             {{
