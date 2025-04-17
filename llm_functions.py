@@ -25,28 +25,31 @@ def generate_post(category, openai_api_key):
     """Generate post using category and openai_api_key"""
 
     prompt_template = """
-        We are Orbytal Solutions (IT company) with page in Instagram.
-        Create multiple-subcategories on category below:
-        Category: {category}
-        Generate an Instagram post on random topic (junior to intermediate level) for one of those sub-categories.
+        Context: 
+            We are Orbytal Solutions (IT company) with page in Instagram. We have multiple-subcategories on category below:
+            Category: {category}
         
-        Respond in a JSON format like this:
-        {{
-            "title": "Your catchy title. Maximum 1 line with 50 characters (including spaces).",
-            "description": "A clear engaging explanation of the topic. 10-20 lines."
-            "code": "Optional short code block of 5-10 lines or empty string. Don't include more than 60 characters per line here including spaces."
-        }}
+        Task:
+            Generate an Instagram post on random topic (junior to intermediate level) for one of those sub-categories.
+            
+            Respond in a JSON format like this:
+            {{
+                "title": "Your catchy title. Maximum 1 line with 50 characters (including spaces).",
+                "description": "A clear engaging explanation of the topic. 10-20 lines."
+                "code": "Optional short code block of 5-10 lines or empty string. Don't include more than 60 characters per line here including spaces."
+            }}
         
         Additional details:
-        - Use only one paragraph and bullets if needed in description.
-        - Don't use more than 5 lines for one paragraph..
-        - Use only one "*" as bullet per line.
-        - Don't use bullets from first line.
-        - Don't use emojis.
-        - Sum of lines used by description and code should be 15-20 lines strictly.
-        - Also add empty line in code after end of block of code like classes, functions or loops.
-        - Don't write incomplete code like comments only.
+            - Use only one paragraph and bullets if needed in description.
+            - Don't use more than 5 lines for one paragraph..
+            - Use only one "*" as bullet per line.
+            - Don't use bullets from first line.
+            - Don't use emojis.
+            - Sum of lines used by description and code should be 15-20 lines strictly.
+            - Also add empty line in code after end of block of code like classes, functions or loops.
+            - Don't write incomplete code like comments only.
         
+        STRICTLY USE BULLETS AND PARAGRAPHS IN DIFFERENT LINE.
         Recheck and correct if errors and mistakes.
         """
     prompt = PromptTemplate(

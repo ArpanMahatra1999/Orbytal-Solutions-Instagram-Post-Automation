@@ -26,7 +26,7 @@ def draw_description(draw, description, font, x, y, image_width, color, shadow_c
     line_spacing = 10
 
     for line in lines:
-        is_bullet = line.startswith("*  ")
+        is_bullet = line.startswith("* ")
         text = line[3:] if is_bullet else line  # Remove bullet prefix for measuring
 
         words = text.split()
