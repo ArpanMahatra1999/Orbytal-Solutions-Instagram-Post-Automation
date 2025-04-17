@@ -26,7 +26,7 @@ def generate_post(category, openai_api_key):
 
     prompt_template = """
         We are Orbytal Solutions (IT company) with page in Instagram.
-        Generate an Instagram post on random topic for category below.
+        Generate an Instagram post on random topic (junior to intermediate level) for category below.
         Category: {category}
         
         Respond in a JSON format like this:
@@ -39,7 +39,8 @@ def generate_post(category, openai_api_key):
         Additional details:
         - Use only one paragraph and bullets if needed in description.
         - Don't use more than 5 lines for one paragraph.
-        - For bullets start line with "*  "
+        - For bullets start line with "*  ".
+        - Use only one "*" as bullet per line.
         - Don't use bullets from first line.
         - Don't use emojis.
         - Sum of lines used by description and code should be 15-20 lines strictly.
