@@ -42,6 +42,7 @@ def generate_post(category, openai_api_key):
         Additional details:
             - Use only one paragraph and bullets if needed in description.
             - Don't use more than 5 lines for one paragraph.
+            - Represent bullet by *.
             - Don't use emojis.
             - Sum of lines used by description and code should be 15-20 lines strictly.
             - Also add empty line in code after end of block of code like classes, functions or loops.
