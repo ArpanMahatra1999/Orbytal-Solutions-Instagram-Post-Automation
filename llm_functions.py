@@ -38,8 +38,7 @@ def generate_post(category, openai_api_key):
         
         Additional details:
         - Use only one paragraph and bullets if needed in description.
-        - Don't use more than 5 lines for one paragraph.
-        - For bullets start line with "*  ".
+        - Don't use more than 5 lines for one paragraph..
         - Use only one "*" as bullet per line.
         - Don't use bullets from first line.
         - Don't use emojis.
