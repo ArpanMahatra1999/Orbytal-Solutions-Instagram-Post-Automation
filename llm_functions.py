@@ -28,8 +28,8 @@ def generate_post(category, openai_api_key):
         We are Orbytal Solutions (IT company) with page in Instagram.
         Create multiple-subcategories on category below:
         Category: {category}
+        Generate an Instagram post on random topic (junior to intermediate level) for one of those sub-categories.
         
-        Using one of those subcategories, generate an Instagram post on random topic (junior to intermediate level) for that sub-category.
         Respond in a JSON format like this:
         {{
             "title": "Your catchy title. Maximum 1 line with 50 characters (including spaces).",
