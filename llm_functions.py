@@ -50,6 +50,7 @@ def generate_post(category, openai_api_key):
             - Don't write incomplete code like comments only.
         
         STRICTLY USE BULLETS AND PARAGRAPHS IN DIFFERENT LINE.
+        STRICTLY USE LESS THAN 60 CHARACTERS PER LINE IN CODE.
         Recheck and correct if errors and mistakes.
         """
     prompt = PromptTemplate(
